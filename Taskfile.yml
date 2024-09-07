@@ -19,6 +19,10 @@ tasks:
       - task: build-image
       - task: push-image
 
+  port-forward:
+    cmds:
+      - kubectl port-forward -n default services/sensei 5432:5432
+
   cleanup:
     cmds:
       - k3d cluster delete patroni-poc
