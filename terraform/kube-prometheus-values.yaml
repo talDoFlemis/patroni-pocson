@@ -1,0 +1,145 @@
+fullnameOverride: prometheus
+
+namespaceOverride: monitoring
+
+defaultRules:
+  create: false
+
+grafana:
+  enabled: true
+  assertNoLeakedSecrets: false
+  fullnameOverride: grafana
+  forceDeployDatasources: false
+  forceDeployDashboards: false
+  defaultDashboardsEnabled: true
+  defaultDashboardsTimezone: America/Fortaleza
+  serviceMonitor:
+    enabled: true
+  admin:
+    existingSecret: grafana-admin-creds
+    userKey: username
+    passwordKey: password
+  grafana.ini:
+    server:
+      root_url: http://grafana.localhost
+
+kubeApiServer:
+  enabled: true
+
+kubelet:
+  enabled: true
+  serviceMonitor:
+    metricRelabelings:
+      - action: replace
+        sourceLabels:
+          - node
+        targetLabel: instance
+
+kubeControllerManager:
+  enabled: false
+  endpoints:
+    - 10.10.11.53
+    - 10.10.11.62
+    - 10.10.11.63
+
+coreDns:
+  enabled: true
+
+kubeDns:
+  enabled: false
+
+kubeStateMetrics:
+  enabled: true
+
+kube-state-metrics:
+  fullnameOverride: kube-state-metrics
+  selfMonitor:
+    enabled: true
+  metricLabelsAllowlist:
+    - pods=[app,component,hub.jupyter.org/username]
+    - nodes=[*]
+  prometheus:
+    monitor:
+      enabled: true
+      relabelings:
+        - action: replace
+          regex: (.*)
+          replacement: $1
+          sourceLabels:
+            - __meta_kubernetes_pod_node_name
+          targetLabel: kubernetes_node
+
+nodeExporter:
+  enabled: true
+  serviceMonitor:
+    relabelings:
+      - action: replace
+        regex: (.*)
+        replacement: $1
+        sourceLabels:
+          - __meta_kubernetes_pod_node_name
+        targetLabel: kubernetes_node
+
+prometheus-node-exporter:
+  fullnameOverride: node-exporter
+  podLabels:
+    jobLabel: node-exporter
+  extraArgs:
+    - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|var/lib/docker/.+|var/lib/kubelet/.+)($|/)
+    - --collector.filesystem.fs-types-exclude=^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|iso9660|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|selinuxfs|squashfs|sysfs|tracefs)$
+  service:
+    portName: http-metrics
+  prometheus:
+    monitor:
+      enabled: true
+      attachMetadata:
+        node: true
+      relabelings:
+        - action: replace
+          sourceLabels:
+            - __meta_kubernetes_node_name
+          targetLabel: node
+        - action: replace
+          regex: (.*)
+          replacement: $1
+          sourceLabels:
+            - __meta_kubernetes_pod_node_name
+          targetLabel: kubernetes_node
+  resources:
+    requests:
+      memory: 512Mi
+      cpu: 250m
+    limits:
+      memory: 2048Mi
+
+prometheusOperator:
+  enabled: true
+  prometheusConfigReloader:
+    resources:
+      requests:
+        cpu: 200m
+        memory: 50Mi
+      limits:
+        memory: 100Mi
+
+prometheus:
+  enabled: true
+  prometheusSpec:
+    replicas: 1
+    replicaExternalLabelName: "replica"
+    ruleSelectorNilUsesHelmValues: false
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+    probeSelectorNilUsesHelmValues: false
+    retention: 1d
+    enableAdminAPI: true
+    walCompression: true
+    resources:
+      requests:
+        memory: 1024Mi
+        cpu: 1
+      limits:
+        memory: 2048Mi
+
+thanosRuler:
+  enabled: false

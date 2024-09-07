@@ -24,9 +24,13 @@ tasks:
       - task: push-image
       - task: label-workers
 
-  port-forward:
+  sensei-port-forward:
     cmds:
       - kubectl port-forward -n default services/sensei 5432:5432
+
+  grafana-port-forward:
+    cmds:
+      - kubectl port-forward -n monitoring services/grafana 3000:80
 
   cleanup:
     cmds:
