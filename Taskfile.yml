@@ -13,11 +13,16 @@ tasks:
     cmds:
       - docker push ttl.sh/sensei/simple-image:24h
 
+  label-workers:
+    cmds:
+      - kubectl get nodes -o name | grep agent | xargs -P 4 -I {} kubectl label {} node-role.kubernetes.io/agent=
+
   initial-setup:
     cmds:
       - task: create-cluster
       - task: build-image
       - task: push-image
+      - task: label-workers
 
   port-forward:
     cmds:

@@ -2,7 +2,7 @@ apiVersion: k3d.io/v1alpha4
 kind: Simple
 metadata:
   name: patroni-poc
-servers: 3
+servers: 1
 agents: 5
 ports:
   - port: 42069:80
@@ -11,22 +11,17 @@ ports:
   - port: 6969:443
     nodeFilters:
       - loadbalancer
-registries: # define how registries should be created or used
-  create: # creates a default registry to be used with the cluster; same as `--registry-create registry.localhost`
-    name: registry.localhost
-    host: "0.0.0.0"
-    hostPort: "5000"
 options:
   k3d:
     wait: true
     timeout: "60s"
   k3s:
-    extraArgs: # additional arguments passed to the `k3s server|agent` command; same as `--k3s-arg`
+    extraArgs:
       - arg: --tls-san=my.host.domain
         nodeFilters:
           - server:*
     nodeLabels:
-      - label: node-role.kubernetes.io/worker=true
+      - label: worker=true
         nodeFilters:
           - agent:*
   kubeconfig:
