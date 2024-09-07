@@ -1,0 +1,24 @@
+version: "3"
+
+tasks:
+  create-cluster:
+    cmds:
+      - k3d cluster create --config k3d-config.yaml
+
+  build-image:
+    cmds:
+      - docker build -t ttl.sh/sensei/simple-image:24h -f patroni/Dockerfile patroni
+
+  push-image:
+    cmds:
+      - docker push ttl.sh/sensei/simple-image:24h
+
+  initial-setup:
+    cmds:
+      - task: create-cluster
+      - task: build-image
+      - task: push-image
+
+  cleanup:
+    cmds:
+      - k3d cluster delete patroni-poc
