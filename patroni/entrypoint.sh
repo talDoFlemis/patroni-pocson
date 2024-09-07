@@ -14,7 +14,7 @@ bootstrap:
       use_pg_rewind: true
       pg_hba:
       - host all all 0.0.0.0/0 md5
-      - host replication ${PATRONI_REPLICATION_USERNAME} ${PATRONI_KUBERNETES_POD_IP}/16 md5
+      - host replication ${PATRONI_REPLICATION_USERNAME} 0.0.0.0/0 md5
   initdb:
   - auth-host: md5
   - auth-local: trust

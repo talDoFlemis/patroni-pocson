@@ -55,7 +55,7 @@ resources:
     memory: 128Mi
 
 monitor:
-  enable: true
+  enabled: true
 
 autoscaling:
   enabled: false

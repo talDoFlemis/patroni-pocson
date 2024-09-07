@@ -1,0 +1,18 @@
+{{- if .Values.monitor.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "sensei.fullname" . }}
+  labels:
+    {{- include "sensei.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app: poc
+  endpoints:
+  - port: metrics
+    path: /metrics
+  namespaceSelector:
+      matchNames:
+        - default
+{{- end }}

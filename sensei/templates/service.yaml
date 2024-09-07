@@ -24,6 +24,24 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: {{ include "sensei.fullname" . }}-monitor
+  annotations:
+    prometheus.io/port: "metrics"
+    prometheus.io/scrape: "true"
+  labels:
+    {{- include "sensei.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8008
+      targetPort: 8008
+      name: metrics
+  selector:
+    {{- include "sensei.selectorLabels" . | nindent 4 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
   name: {{ include "sensei.fullname" . }}-repl
   labels:
     {{- include "sensei.labels" . | nindent 4 }}
