@@ -24,6 +24,10 @@ tasks:
       - task: push-image
       - task: label-workers
 
+  apply-terraform:
+    cmds:
+      - terraform -chdir=terraform apply
+
   sensei-port-forward:
     cmds:
       - kubectl port-forward -n default services/sensei 5432:5432
@@ -31,6 +35,10 @@ tasks:
   grafana-port-forward:
     cmds:
       - kubectl port-forward -n monitoring services/grafana 3000:80
+
+  noco-port-forward:
+    cmds:
+      - kubectl port-forward -n default services/nocodb-service 8080:8080
 
   cleanup:
     cmds:
