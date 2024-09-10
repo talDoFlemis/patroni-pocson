@@ -37,13 +37,3 @@ resource "helm_release" "kube_prometheus_stack" {
     value = kubernetes_secret.grafana_admin_creds.metadata[0].name
   }
 }
-
-resource "grafana_folder" "patroni" {
-  title = "patroni"
-  uid   = "patroni-here"
-}
-
-resource "grafana_dashboard" "patroni" {
-  folder      = grafana_folder.patroni.uid
-  config_json = file("./patroni-dashboard.json")
-}
