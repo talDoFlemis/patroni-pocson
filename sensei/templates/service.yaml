@@ -24,6 +24,22 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: {{ include "sensei.fullname" . }}-primary
+  labels:
+    {{- include "sensei.labels" . | nindent 4 }}
+    role: primary
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.port }}
+  selector:
+    {{- include "sensei.selectorLabels" . | nindent 4 }}
+    role: primary
+---
+apiVersion: v1
+kind: Service
+metadata:
   name: {{ include "sensei.fullname" . }}-monitor
   annotations:
     prometheus.io/port: "metrics"
