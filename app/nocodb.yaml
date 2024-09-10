@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nocodb
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nocodb
+  template:
+    metadata:
+      labels:
+        app: nocodb
+    spec:
+      containers:
+        - name: nocodb
+          image: nocodb/nocodb:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: NC_DB
+              value: "pg://sensei-primary:5432?u=postgres&p=postgres&d=postgres"
+          volumeMounts:
+            - name: nc-data
+              mountPath: /usr/app/data
+      volumes:
+        - name: nc-data
+          emptyDir:
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nocodb-service
+spec:
+  selector:
+    app: nocodb # Matches the label in the Deployment
+  ports:
+    - protocol: TCP
+      port: 8080 # The port exposed by the service
+      targetPort: 8080 # The container port
+  type: ClusterIP # Change to LoadBalancer for external access
