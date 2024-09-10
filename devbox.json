@@ -5,7 +5,8 @@
     "kubectl@1.31.0",
     "go-task@3.38.0",
     "figlet@2.2.5",
-    "lolcat@100.0.1"
+    "lolcat@100.0.1",
+    "terraform@1.9.5"
   ],
   "shell": {
     "init_hook": ["figlet -c -f slant 'Patroni Poc' | lolcat"],
