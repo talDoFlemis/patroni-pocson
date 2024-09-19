@@ -1,7 +1,3 @@
-Aqui está um exemplo de README organizado para o seu projeto:
-
----
-
 # Projeto de Alta Disponibilidade com Patroni
 
 Este repositório contém o projeto desenvolvido para a disciplina **CK0196 - BANCOS DE DADOS DISTRIBUÍDOS**, com foco na criação e execução de um cluster PostgreSQL altamente disponível utilizando **Patroni**, uma ferramenta de automação para a configuração de bancos de dados distribuídos e de alta disponibilidade. O projeto também integra o **NocoDB**, uma ferramenta que transforma bancos de dados relacionais em uma interface de planilha.
@@ -76,6 +72,16 @@ task noco-port-forward
 ```
 
 Esse comando abrirá o acesso ao **NocoDB** localmente via um túnel para o Kubernetes.
+
+
+### 5. Testar replicação
+
+> devbox shell
+> kubectl get nodes
+> kubectl get pods
+> kubectl get pods - L role
+> kubectl delete pods -l role=primary
+
 
 ## Licença
 
